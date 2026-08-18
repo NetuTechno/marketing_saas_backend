@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id             String   @id @default(uuid())
+  orderId        String
+  warehouseCode  String
+  shipToName     String
+  shipToState    String
+  phoneNumber    String
+  sku            String
+  orderPlaceDate DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([orderId, sku])
+  @@index([orderId])
+  @@index([warehouseCode])
+  @@index([shipToState])
+  @@index([sku])
+  @@index([orderPlaceDate])
+}
