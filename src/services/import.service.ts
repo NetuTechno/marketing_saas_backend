@@ -10,6 +10,7 @@ export const importOrdersFromCsv = async (csvBuffer: Buffer) => {
     skip_empty_lines: true,
     trim: true,
     bom: true, // Handle UTF-8 BOM
+    relax_column_count: true,
   });
 
   if (records.length === 0) {
@@ -88,9 +89,9 @@ export const importOrdersFromCsv = async (csvBuffer: Buffer) => {
   }
 
   return {
-    totalRows: records.length,
-    importedRows,
-    duplicateRows,
-    failedRows,
+    total: records.length,
+    imported: importedRows,
+    duplicates: duplicateRows,
+    failed: failedRows,
   };
 };

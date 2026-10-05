@@ -4,6 +4,6 @@ import { importOrders } from '../controllers/import.controller';
 
 const router = Router();
 
-router.post('/orders', upload.single('file'), importOrders);
+router.post('/orders', upload.array('files'), importOrders);
 
 export const importRoutes = router;
