@@ -16,7 +16,14 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: env.FRONTEND_URL,
+    origin: function (origin, callback) {
+      const allowedOrigins = [env.FRONTEND_URL, 'http://localhost:3000', 'https://marketing-saas-frontend-alpha.vercel.app'];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );
