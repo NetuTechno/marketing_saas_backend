@@ -4,8 +4,9 @@ import {
   getOrderFilters,
   getOrderById,
   deleteOrder,
+  getOrderAnalytics,
 } from '../services/order.service';
-import { getOrdersQuerySchema } from '../validators/order.validator';
+import { getOrdersQuerySchema, getAnalyticsQuerySchema } from '../validators/order.validator';
 import { sendSuccess } from '../utils/api-response';
 import { Prisma } from '@prisma/client';
 
@@ -16,7 +17,7 @@ export const listOrders = async (
 ) => {
   try {
     const query = getOrdersQuerySchema.parse(req.query);
-    const result = await getOrders(query);
+    const result = await getOrders(query, req.user!);
     res.status(200).json(sendSuccess('Orders fetched successfully', result));
   } catch (error) {
     next(error);
@@ -29,7 +30,7 @@ export const listOrderFilters = async (
   next: NextFunction
 ) => {
   try {
-    const filters = await getOrderFilters();
+    const filters = await getOrderFilters(req.user!);
     res.status(200).json(sendSuccess('Filters fetched successfully', filters));
   } catch (error) {
     next(error);
@@ -43,7 +44,7 @@ export const getOrder = async (
 ) => {
   try {
     const id = req.params.id as string;
-    const order = await getOrderById(id);
+    const order = await getOrderById(id, req.user!);
 
     if (!order) {
       const error: any = new Error('Order not found');
@@ -64,7 +65,7 @@ export const removeOrder = async (
 ) => {
   try {
     const id = req.params.id as string;
-    await deleteOrder(id);
+    await deleteOrder(id, req.user!);
     res.status(200).json(sendSuccess('Order deleted successfully'));
   } catch (error) {
     if (
@@ -78,3 +79,19 @@ export const removeOrder = async (
     next(error);
   }
 };
+
+export const listOrderAnalytics = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const query = getAnalyticsQuerySchema.parse(req.query);
+    const analytics = await getOrderAnalytics(query, req.user!);
+    res.status(200).json(sendSuccess('Analytics fetched successfully', analytics));
+  } catch (error) {
+    next(error);
+  }
+};
+
+

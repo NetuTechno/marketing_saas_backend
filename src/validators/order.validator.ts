@@ -7,12 +7,23 @@ export const getOrdersQuerySchema = z.object({
   warehouseCode: z.string().optional(),
   shipToState: z.string().optional(),
   sku: z.string().optional(),
+  userId: z.string().optional(),
   shipToName: z.string().optional(),
   phoneNumber: z.string().optional(),
   fromDate: z.string().optional(),
   toDate: z.string().optional(),
-  sortBy: z.enum(['orderId', 'warehouseCode', 'shipToName', 'shipToState', 'sku', 'orderPlaceDate', 'createdAt']).default('createdAt'),
+  sortBy: z.enum(['orderId', 'warehouseCode', 'shipToName', 'shipToState', 'sku', 'orderPlaceDate', 'createdAt']).default('orderPlaceDate'),
   sortOrder: z.enum(['asc', 'desc']).default('desc'),
 });
 
 export type GetOrdersQuery = z.infer<typeof getOrdersQuerySchema>;
+
+export const getAnalyticsQuerySchema = z.object({
+  fromDate: z.string().optional(),
+  toDate: z.string().optional(),
+  userId: z.string().optional(),
+});
+
+export type GetAnalyticsQuery = z.infer<typeof getAnalyticsQuerySchema>;
+
+

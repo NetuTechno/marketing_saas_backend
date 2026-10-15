@@ -7,8 +7,10 @@ import { errorMiddleware } from './middleware/error.middleware';
 import { notFoundMiddleware } from './middleware/not-found.middleware';
 import { sendSuccess } from './utils/api-response';
 
+import { authRoutes } from './routes/auth.routes';
 import { orderRoutes } from './routes/order.routes';
 import { importRoutes } from './routes/import.routes';
+import { adminRoutes } from './routes/admin.routes';
 
 const app = express();
 
@@ -37,8 +39,10 @@ app.get('/api/v1/health', (req, res) => {
 });
 
 // Routes
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/import', importRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 // Error Handling
 app.use(notFoundMiddleware);

@@ -8,6 +8,8 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   DATABASE_URL: z.string().min(1),
   FRONTEND_URL: z.string().default('http://localhost:3000'),
+  JWT_SECRET: z.string().default('marketing-saas-super-secret-jwt-key-2026'),
+  JWT_EXPIRES_IN: z.string().default('7d'),
 });
 
 const _env = envSchema.safeParse(process.env);

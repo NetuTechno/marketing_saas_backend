@@ -8,6 +8,12 @@ export const importOrders = async (
   next: NextFunction
 ) => {
   try {
+    if (req.user?.role !== 'USER') {
+      const error: any = new Error('Access denied. Only users can upload orders. Admin has view-only access.');
+      error.status = 403;
+      throw error;
+    }
+
     const files = req.files as Express.Multer.File[];
     
     if (!files || files.length === 0) {
@@ -20,11 +26,13 @@ export const importOrders = async (
       total: 0,
       imported: 0,
       duplicates: 0,
-      failed: 0
+      failed: 0,
     };
 
+    const userId = req.user.userId;
+
     for (const file of files) {
-      const result = await importOrdersFromCsv(file.buffer);
+      const result = await importOrdersFromCsv(file.buffer, userId);
       overallResult.total += result.total;
       overallResult.imported += result.imported;
       overallResult.duplicates += result.duplicates;
@@ -33,7 +41,6 @@ export const importOrders = async (
 
     res.status(200).json(sendSuccess('CSV files imported successfully', overallResult));
   } catch (error) {
-    // Check for our custom header error to send 400 Bad Request
     if (error instanceof Error && error.message.includes('Missing required CSV columns')) {
       (error as any).status = 400;
     }

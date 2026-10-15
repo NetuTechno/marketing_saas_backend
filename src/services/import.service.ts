@@ -3,7 +3,7 @@ import { prisma } from '../config/prisma';
 import { requiredCsvHeaders, csvToModelMap, normalizeDate } from '../utils/csv.utils';
 import { Prisma } from '@prisma/client';
 
-export const importOrdersFromCsv = async (csvBuffer: Buffer) => {
+export const importOrdersFromCsv = async (csvBuffer: Buffer, userId?: string) => {
   // Parse CSV
   const records: any[] = parse(csvBuffer, {
     columns: true,
@@ -67,6 +67,7 @@ export const importOrdersFromCsv = async (csvBuffer: Buffer) => {
         phoneNumber: record['Phone Number'] || '',
         sku,
         orderPlaceDate,
+        userId: userId || null,
       });
     } catch (err) {
       failedRows++;
